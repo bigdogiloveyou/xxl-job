@@ -26,6 +26,9 @@ public class JobFailMonitorHelper {
 
 	// ---------------------- monitor ----------------------
 
+	/**
+	 * 寻找失败的任务的线程
+	 */
 	private Thread monitorThread;
 	private volatile boolean toStop = false;
 	public void start(){

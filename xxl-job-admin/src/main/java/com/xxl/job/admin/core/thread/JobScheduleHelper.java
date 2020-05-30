@@ -34,6 +34,9 @@ public class JobScheduleHelper {
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
 
+    /**
+     * 启动线程运行任务，任务为从 xxl_job_info 表中查询的任务信息
+     */
     public void start(){
 
         // schedule thread

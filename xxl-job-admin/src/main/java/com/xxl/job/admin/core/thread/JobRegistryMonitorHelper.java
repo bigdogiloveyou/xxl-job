@@ -22,6 +22,9 @@ public class JobRegistryMonitorHelper {
 		return instance;
 	}
 
+	/**
+	 * 扫描自动注册的执行器线程
+	 */
 	private Thread registryThread;
 	private volatile boolean toStop = false;
 	public void start(){

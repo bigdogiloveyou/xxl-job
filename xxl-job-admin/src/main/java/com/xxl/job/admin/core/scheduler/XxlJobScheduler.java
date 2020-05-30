@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author xuxueli 2018-10-28 00:18:17
+ *
+ * 这个类是为 admin 注册中心服务的
  */
 
 public class XxlJobScheduler  {
