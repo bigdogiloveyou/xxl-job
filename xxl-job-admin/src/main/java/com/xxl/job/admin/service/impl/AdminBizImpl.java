@@ -26,6 +26,8 @@ import java.util.List;
 
 /**
  * @author xuxueli 2017-07-27 21:54:20
+ *
+ * 此类主要是执行器对 admin 的调用，有 callback/registry/registryRemove
  */
 @Service
 public class AdminBizImpl implements AdminBiz {

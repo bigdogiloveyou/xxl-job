@@ -104,6 +104,7 @@ public class JobThread extends Thread{
 		}
 
 		// execute
+		// 从 queue 中取 handler 执行
 		while(!toStop){
 			running = false;
 			idleTimes++;
@@ -134,6 +135,7 @@ public class JobThread extends Thread{
 							FutureTask<ReturnT<String>> futureTask = new FutureTask<ReturnT<String>>(new Callable<ReturnT<String>>() {
 								@Override
 								public ReturnT<String> call() throws Exception {
+									// 这里就是调用 handler 的 execute
 									return handler.execute(triggerParamTmp.getExecutorParams());
 								}
 							});
@@ -189,6 +191,7 @@ public class JobThread extends Thread{
                     // callback handler info
                     if (!toStop) {
                         // commonm
+						// handler 运行成功后，把参数放到 TriggerCallbackThread 的 queue 中，调用调用 admin 的接口（callback），将结果同步给 admin
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTime(), executeResult));
                     } else {
                         // is killed

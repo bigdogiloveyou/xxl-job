@@ -37,6 +37,7 @@ public class JobLogFileCleanThread {
         localThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                // 基本上的逻辑就是根据文件名称（文件名称是日期）与当前时间的差值，看是否是在 logRetentionDays 范围内，在范围之外就删除
                 while (!toStop) {
                     try {
                         // clean log dir, over logRetentionDays
