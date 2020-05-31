@@ -22,6 +22,9 @@ import java.util.concurrent.*;
 
 /**
  * handler thread
+ *
+ * 此类就是用来运行执行器的线程
+ *
  * @author xuxueli 2016-1-16 19:52:47
  */
 public class JobThread extends Thread{

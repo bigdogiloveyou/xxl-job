@@ -34,6 +34,7 @@ public class EmbedServer {
     private Thread thread;
 
     public void start(final String address, final int port, final String appname, final String accessToken) {
+        // executorBiz 是 ExecutorBizImpl，意味着执行器执行的都是此类的方法；而 ExecutorBizClient 是 admin 使用的
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
 
@@ -75,7 +76,7 @@ public class EmbedServer {
                                             .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))  // beat 3N, close if idle
                                             .addLast(new HttpServerCodec())
                                             .addLast(new HttpObjectAggregator(5 * 1024 * 1024))  // merge request & reponse to FULL
-                                            .addLast(new EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool));
+                                            .addLast(new EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool)); // 此 handler 就是供 admin 远程请求的 handler
                                 }
                             })
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -130,6 +131,8 @@ public class EmbedServer {
 
     /**
      * netty_http
+     *
+     * 此类就是用来处理 admin 的请求
      *
      * Copy from : https://github.com/xuxueli/xxl-rpc
      *

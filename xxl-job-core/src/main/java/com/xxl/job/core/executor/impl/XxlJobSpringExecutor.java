@@ -44,6 +44,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         GlueFactory.refreshInstance(1);
 
         // super start
+        // 这个就是跟 frameless 的逻辑差不多
         try {
             super.start();
         } catch (Exception e) {

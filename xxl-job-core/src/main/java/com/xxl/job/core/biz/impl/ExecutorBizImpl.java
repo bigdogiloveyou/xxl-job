@@ -18,6 +18,8 @@ import java.util.Date;
 
 /**
  * Created by xuxueli on 17/3/1.
+ *
+ * 执行器使用
  */
 public class ExecutorBizImpl implements ExecutorBiz {
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
@@ -43,6 +45,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return ReturnT.SUCCESS;
     }
 
+    /**
+     * 真正的运行线程
+     * @param triggerParam
+     * @return
+     */
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
@@ -52,6 +59,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // valid：jobHandler + jobThread
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
+        // 执行器模式，一般都是这种为主
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler
