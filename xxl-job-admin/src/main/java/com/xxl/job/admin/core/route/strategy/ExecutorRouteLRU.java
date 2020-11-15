@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteLRU extends ExecutorRouter {
 
+    // 不同的 jobid 换成的执行器的注册地址
     private static ConcurrentMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
     private static long CACHE_VALID_TIME = 0;
 

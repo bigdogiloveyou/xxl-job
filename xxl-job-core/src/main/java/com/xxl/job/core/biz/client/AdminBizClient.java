@@ -11,6 +11,8 @@ import java.util.List;
 /**
  * admin api test
  *
+ * 此类是执行器用来调用 admin 接口的 client
+ *
  * @author xuxueli 2017-07-28 22:14:52
  */
 public class AdminBizClient implements AdminBiz {
@@ -27,8 +29,19 @@ public class AdminBizClient implements AdminBiz {
         }
     }
 
+    /**
+     * admin 地址
+     */
     private String addressUrl ;
+
+    /**
+     * admin token
+     */
     private String accessToken;
+
+    /**
+     * 超时时间
+     */
     private int timeout = 3;
 
 

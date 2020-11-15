@@ -10,7 +10,15 @@ import java.util.List;
 public class XxlJobGroup {
 
     private int id;
+
+    /**
+     * 执行器名称
+     */
     private String appname;
+
+    /**
+     * 执行器展示名称
+     */
     private String title;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)

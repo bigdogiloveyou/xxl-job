@@ -20,6 +20,9 @@ import java.util.*;
 
 /**
  * job group controller
+ *
+ *
+ * 执行器组
  * @author xuxueli 2016-10-02 20:52:56
  */
 @Controller
@@ -87,6 +90,11 @@ public class JobGroupController {
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
+	/**
+	 * 更新执行器信息
+	 * @param xxlJobGroup
+	 * @return
+	 */
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
@@ -130,6 +138,11 @@ public class JobGroupController {
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
+	/**
+	 * 根据 appName 得到注册执行器
+	 * @param appnameParam
+	 * @return
+	 */
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
 		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());

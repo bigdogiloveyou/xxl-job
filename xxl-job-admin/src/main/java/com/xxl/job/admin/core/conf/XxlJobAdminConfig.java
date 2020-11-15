@@ -16,6 +16,8 @@ import java.util.Arrays;
 /**
  * xxl-job config
  *
+ * admin 控制台配置，主要是创建 XxlJobScheduler，然后启动 thread 包中的线程
+ *
  * @author xuxueli 2017-04-28
  */
 

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /**
  * @author xuxueli 2020-04-11 22:27
+ *
+ * 日志参数
  */
 public class LogParam implements Serializable {
     private static final long serialVersionUID = 42L;
@@ -16,7 +18,14 @@ public class LogParam implements Serializable {
         this.fromLineNum = fromLineNum;
     }
 
+    /**
+     * 记录时间
+     */
     private long logDateTim;
+
+    /**
+     * 日志 id
+     */
     private long logId;
     private int fromLineNum;
 

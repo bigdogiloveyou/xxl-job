@@ -7,7 +7,7 @@ import com.xxl.job.core.util.XxlJobRemotingUtil;
 /**
  * admin api test
  *
- * admin 使用
+ * 此类是 admin 需要运行任务的时候，使用 post 请求执行器执行任务的 client
  *
  * @author xuxueli 2017-07-28 22:14:52
  */

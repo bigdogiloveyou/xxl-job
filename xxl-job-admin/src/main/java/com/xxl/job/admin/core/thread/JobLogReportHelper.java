@@ -14,6 +14,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * job log report helper
  *
+ * 线程不断统计 log 日志，统计在某个 调度-时间 段：
+ *   运行中-日志数量,
+ *   执行成功-日志数量,
+ *   执行失败-日志数量。
+ *
  * @author xuxueli 2019-11-22
  */
 public class JobLogReportHelper {

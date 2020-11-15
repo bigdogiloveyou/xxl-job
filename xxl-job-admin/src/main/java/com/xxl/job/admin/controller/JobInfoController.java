@@ -29,6 +29,9 @@ import java.util.*;
 
 /**
  * index controller
+ *
+ *
+ * 执行器中每个任务
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
@@ -63,6 +66,13 @@ public class JobInfoController {
 		return "jobinfo/jobinfo.index";
 	}
 
+
+	/**
+	 * 根据角色过滤任务
+	 * @param request
+	 * @param jobGroupList_all
+	 * @return
+	 */
 	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
 		List<XxlJobGroup> jobGroupList = new ArrayList<>();
 		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
@@ -122,13 +132,26 @@ public class JobInfoController {
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
-	
+
+	/**
+	 * start 是启动，如果配置了 cron 表达式，会按照 cron 启动
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(int id) {
 		return xxlJobService.start(id);
 	}
-	
+
+
+	/**
+	 * trigger 表示执行一次
+	 * @param id
+	 * @param executorParam
+	 * @param addressList
+	 * @return
+	 */
 	@RequestMapping("/trigger")
 	@ResponseBody
 	//@PermissionLimit(limit = false)

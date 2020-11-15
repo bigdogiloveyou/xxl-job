@@ -25,15 +25,22 @@ import java.util.concurrent.TimeUnit;
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
+    /**
+     * 单例
+     */
     private static TriggerCallbackThread instance = new TriggerCallbackThread();
+
     public static TriggerCallbackThread getInstance(){
         return instance;
     }
 
     /**
      * job results callback queue
+     *
+     * 任务结果回调 queue
      */
     private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
+
     public static void pushCallBack(HandleCallbackParam callback){
         getInstance().callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
@@ -41,10 +48,23 @@ public class TriggerCallbackThread {
 
     /**
      * callback thread
+     *
+     * 触发器回调线程
      */
     private Thread triggerCallbackThread;
+
+    /**
+     * 触发器回调重试线程
+     */
     private Thread triggerRetryCallbackThread;
+
+    /**
+     * 是否停止
+     */
     private volatile boolean toStop = false;
+
+
+
     public void start() {
 
         // valid
@@ -85,6 +105,7 @@ public class TriggerCallbackThread {
                 }
 
                 // last callback
+                // 上次回调，因为上面的异常是 take 抛出的，如果不是代码问题，抛异常说明取失败了
                 try {
                     List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                     int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
@@ -106,6 +127,7 @@ public class TriggerCallbackThread {
 
 
         // retry
+        //
         triggerRetryCallbackThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -159,6 +181,8 @@ public class TriggerCallbackThread {
 
     /**
      * do callback, will retry if error
+     *
+     * 进行回调，出错会重试
      * @param callbackParamList
      */
     private void doCallback(List<HandleCallbackParam> callbackParamList){
@@ -166,6 +190,7 @@ public class TriggerCallbackThread {
         // callback, will retry if error
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
             try {
+                // 获取 AdminBizClient 进行方法调用
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                 if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
@@ -178,6 +203,8 @@ public class TriggerCallbackThread {
                 callbackLog(callbackParamList, "<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
             }
         }
+
+        // 只要又一个成功就不会记录
         if (!callbackRet) {
             appendFailCallbackFile(callbackParamList);
         }
@@ -189,6 +216,8 @@ public class TriggerCallbackThread {
     private void callbackLog(List<HandleCallbackParam> callbackParamList, String logContent){
         for (HandleCallbackParam callbackParam: callbackParamList) {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
+
+            // 这个 contextHolder 有什么用目前未知
             XxlJobFileAppender.contextHolder.set(logFileName);
             XxlJobLogger.log(logContent);
         }
@@ -197,7 +226,14 @@ public class TriggerCallbackThread {
 
     // ---------------------- fail-callback file ----------------------
 
+    /**
+     * 失败文件目录
+     */
     private static String failCallbackFilePath = XxlJobFileAppender.getLogPath().concat(File.separator).concat("callbacklog").concat(File.separator);
+
+    /**
+     * 失败文件日志
+     */
     private static String failCallbackFileName = failCallbackFilePath.concat("xxl-job-callback-{x}").concat(".log");
 
     private void appendFailCallbackFile(List<HandleCallbackParam> callbackParamList){
@@ -221,6 +257,10 @@ public class TriggerCallbackThread {
         FileUtil.writeFileContent(callbackLogFile, callbackParamList_bytes);
     }
 
+
+    /**
+     * 从文件中获取信息尝试
+     */
     private void retryFailCallbackFile(){
 
         // valid

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /**
  * @author xuxueli 2020-04-11 22:27
+ *
+ * 关闭参数
  */
 public class KillParam implements Serializable {
     private static final long serialVersionUID = 42L;
@@ -14,6 +16,9 @@ public class KillParam implements Serializable {
         this.jobId = jobId;
     }
 
+    /**
+     * 任务 id
+     */
     private int jobId;
 
 

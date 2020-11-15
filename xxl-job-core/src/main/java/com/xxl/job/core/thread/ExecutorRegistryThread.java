@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
+ *
+ * 不停的向 admin 注册
+ *
+ *
  * Created by xuxueli on 17/3/2.
  */
 public class ExecutorRegistryThread {

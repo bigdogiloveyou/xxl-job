@@ -19,16 +19,22 @@ import java.util.Date;
 /**
  * Created by xuxueli on 17/3/1.
  *
- * 执行器使用
+ * 执行器使用，接收 admin 的 post 请求来执行逻辑
  */
 public class ExecutorBizImpl implements ExecutorBiz {
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
 
+    /**
+     * 心跳
+     * @return
+     */
     @Override
     public ReturnT<String> beat() {
         return ReturnT.SUCCESS;
     }
 
+
+    // 就是是否有任务正在运行或者队列里是否有任务，来判断是否为 idle
     @Override
     public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam) {
 
@@ -127,6 +133,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // executor block strategy
+        // 执行阻塞策略：
+        //      单机串行（默认）：调度请求进入单机执行器后，调度请求进入FIFO队列并以串行方式运行；
+        //      丢弃后续调度：调度请求进入单机执行器后，发现执行器存在运行的调度任务，本次请求将会被丢弃并标记为失败；
+        //      覆盖之前调度：调度请求进入单机执行器后，发现执行器存在运行的调度任务，将会终止运行中的调度任务并清空队列，然后运行本地调度任务；
+
         if (jobThread != null) {
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {

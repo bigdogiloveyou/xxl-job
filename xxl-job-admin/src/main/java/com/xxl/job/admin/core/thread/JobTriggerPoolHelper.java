@@ -68,6 +68,8 @@ public class JobTriggerPoolHelper {
 
     /**
      * add trigger
+     *
+     * 将任务加入到触发器
      */
     public void addTrigger(final int jobId,
                            final TriggerTypeEnum triggerType,

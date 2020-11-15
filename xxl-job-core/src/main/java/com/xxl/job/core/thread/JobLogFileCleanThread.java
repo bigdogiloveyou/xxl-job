@@ -20,13 +20,29 @@ import java.util.concurrent.TimeUnit;
 public class JobLogFileCleanThread {
     private static Logger logger = LoggerFactory.getLogger(JobLogFileCleanThread.class);
 
+    /**
+     * 只实例化一个是吗
+     */
     private static JobLogFileCleanThread instance = new JobLogFileCleanThread();
+
     public static JobLogFileCleanThread getInstance(){
         return instance;
     }
 
+    /**
+     * 真正的清理线程
+     */
     private Thread localThread;
+
+    /**
+     * 是否停止
+     */
     private volatile boolean toStop = false;
+
+    /**
+     * 启动线程
+     * @param logRetentionDays
+     */
     public void start(final long logRetentionDays){
 
         // limit min value
@@ -75,6 +91,7 @@ public class JobLogFileCleanThread {
                                     continue;
                                 }
 
+
                                 if ((todayDate.getTime()-logFileCreateDate.getTime()) >= logRetentionDays * (24 * 60 * 60 * 1000) ) {
                                     FileUtil.deleteRecursively(childFile);
                                 }
@@ -101,6 +118,7 @@ public class JobLogFileCleanThread {
 
             }
         });
+        // 设置守护线程的目的是不想阻碍 main 方法退出，即 jvm 退出
         localThread.setDaemon(true);
         localThread.setName("xxl-job, executor JobLogFileCleanThread");
         localThread.start();

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /**
  * @author xuxueli 2020-04-11 22:27
+ *
+ * 空闲心跳
  */
 public class IdleBeatParam implements Serializable {
     private static final long serialVersionUID = 42L;
@@ -14,6 +16,9 @@ public class IdleBeatParam implements Serializable {
         this.jobId = jobId;
     }
 
+    /**
+     * 任务 id
+     */
     private int jobId;
 
 

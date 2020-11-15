@@ -8,8 +8,19 @@ import java.io.Serializable;
 public class RegistryParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
+    /**
+     * 组
+     */
     private String registryGroup;
+
+    /**
+     * key 是执行器名称，如：xxl-job-executor-sample
+     */
     private String registryKey;
+
+    /**
+     * value 为执行器的地址，如：http://192.168.1.105:9999/
+     */
     private String registryValue;
 
     public RegistryParam(){}

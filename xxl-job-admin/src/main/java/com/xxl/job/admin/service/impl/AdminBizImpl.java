@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author xuxueli 2017-07-27 21:54:20
  *
- * 此类主要是执行器对 admin 的调用，有 callback/registry/registryRemove
+ * 此类主要是 admin 收到了执行器的 post 请求后，进行的处理，有 callback/registry/registryRemove
  */
 @Service
 public class AdminBizImpl implements AdminBiz {
@@ -54,8 +54,14 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
+    /**
+     * 真正的 callback 逻辑，处理执行器传递过来的结果，更新日志记录。
+     * @param handleCallbackParam
+     * @return
+     */
     private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
         // valid log item
+        // 1、查找日志
         XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
@@ -65,6 +71,7 @@ public class AdminBizImpl implements AdminBiz {
         }
 
         // trigger success, to trigger child job
+        // 2、触发成功，触发子任务
         String callbackMsg = null;
         if (IJobHandler.SUCCESS.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
             XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
@@ -98,6 +105,7 @@ public class AdminBizImpl implements AdminBiz {
         }
 
         // handle msg
+        // 3、处理信息
         StringBuffer handleMsg = new StringBuffer();
         if (log.getHandleMsg()!=null) {
             handleMsg.append(log.getHandleMsg()).append("<br>");
@@ -131,6 +139,11 @@ public class AdminBizImpl implements AdminBiz {
         }
     }
 
+    /**
+     * 注册服务，更新注册服务，没有则插入
+     * @param registryParam
+     * @return
+     */
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
 
@@ -151,6 +164,12 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
+
+    /**
+     * 移除注册的执行器
+     * @param registryParam
+     * @return
+     */
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
 

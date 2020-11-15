@@ -30,7 +30,14 @@ import java.util.concurrent.*;
 public class EmbedServer {
     private static final Logger logger = LoggerFactory.getLogger(EmbedServer.class);
 
+    /**
+     * 执行器
+     */
     private ExecutorBiz executorBiz;
+
+    /**
+     * 启动 netty server 的线程
+     */
     private Thread thread;
 
     public void start(final String address, final int port, final String appname, final String accessToken) {
@@ -141,15 +148,33 @@ public class EmbedServer {
     public static class EmbedHttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         private static final Logger logger = LoggerFactory.getLogger(EmbedHttpServerHandler.class);
 
+        /**
+         * 执行器
+         */
         private ExecutorBiz executorBiz;
+
+        /**
+         * token
+         */
         private String accessToken;
+
+        /**
+         * 线程池
+         */
         private ThreadPoolExecutor bizThreadPool;
+
         public EmbedHttpServerHandler(ExecutorBiz executorBiz, String accessToken, ThreadPoolExecutor bizThreadPool) {
             this.executorBiz = executorBiz;
             this.accessToken = accessToken;
             this.bizThreadPool = bizThreadPool;
         }
 
+        /**
+         * 监听 admin 的请求
+         * @param ctx
+         * @param msg
+         * @throws Exception
+         */
         @Override
         protected void channelRead0(final ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
 
@@ -177,6 +202,14 @@ public class EmbedServer {
             });
         }
 
+        /**
+         * 处理 admin 的请求
+         * @param httpMethod
+         * @param uri
+         * @param requestData
+         * @param accessTokenReq
+         * @return
+         */
         private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
 
             // valid
@@ -193,6 +226,7 @@ public class EmbedServer {
             }
 
             // services mapping
+            // 根据 url 的不同类型调用不同的服务
             try {
                 if ("/beat".equals(uri)) {
                     return executorBiz.beat();

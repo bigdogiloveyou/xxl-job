@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 主要是前端点击启动（/start）运行后，此类中的线程会扫描 xxl_job_info 表中的任务信息进行运行
+ *
  * @author xuxueli 2019-05-21
  */
 public class JobScheduleHelper {
@@ -32,6 +34,8 @@ public class JobScheduleHelper {
     private Thread ringThread;
     private volatile boolean scheduleThreadToStop = false;
     private volatile boolean ringThreadToStop = false;
+
+    // ringdata 是啥？
     private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
 
     /**
@@ -72,6 +76,8 @@ public class JobScheduleHelper {
                         connAutoCommit = conn.getAutoCommit();
                         conn.setAutoCommit(false);
 
+                        // for update 锁表，虽然索引明确是行级锁，单因为只有一行，相当于表级锁。这句话相当于选举，针对同一个
+                        // 数据库，只有一个 admin 进行任务的调度
                         preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
                         preparedStatement.execute();
 
@@ -85,6 +91,7 @@ public class JobScheduleHelper {
                             for (XxlJobInfo jobInfo: scheduleList) {
 
                                 // time-ring jump
+                                // 大于当前时间跳过，直接插入下次运行时间
                                 if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
                                     logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
@@ -122,7 +129,8 @@ public class JobScheduleHelper {
                                     // 1、make ring second
                                     int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
 
-                                    // 2、push time ring
+                                    // 2、push time ringData 中，让 ring 线程去 trigger
+                                    // 好像是直接发到
                                     pushTimeRing(ringSecond, jobInfo.getId());
 
                                     // 3、fresh next

@@ -20,6 +20,9 @@ import java.util.List;
 
 /**
  * Created by xuxueli on 17/5/10.
+ *
+ *
+ * 此类是执行器服务器执行 job 完毕后，调用此接口，更新日志信息
  */
 @Controller
 @RequestMapping("/api")
@@ -54,13 +57,22 @@ public class JobApiController {
         }
 
         // services mapping
+        // 匹配执行器调用的服务
+
+        // callback 是返回结果
         if ("callback".equals(uri)) {
             List<HandleCallbackParam> callbackParamList = GsonTool.fromJson(data, List.class, HandleCallbackParam.class);
             return adminBiz.callback(callbackParamList);
-        } else if ("registry".equals(uri)) {
+        }
+
+        // registry 是注册服务
+        else if ("registry".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
             return adminBiz.registry(registryParam);
-        } else if ("registryRemove".equals(uri)) {
+        }
+
+        // registryRemove 是去掉注册的服务
+        else if ("registryRemove".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
             return adminBiz.registryRemove(registryParam);
         } else {
