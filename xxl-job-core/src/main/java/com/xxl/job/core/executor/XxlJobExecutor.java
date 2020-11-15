@@ -200,6 +200,11 @@ public class XxlJobExecutor  {
             address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
         }
 
+        // accessToken
+        if (accessToken==null || accessToken.trim().length()==0) {
+            logger.warn(">>>>>>>>>>> xxl-job accessToken is empty. To ensure system security, please set the accessToken.");
+        }
+
         // start
         embedServer = new EmbedServer();
         embedServer.start(address, port, appname, accessToken);
@@ -217,12 +222,12 @@ public class XxlJobExecutor  {
 
     // ---------------------- job handler repository ----------------------
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    public static IJobHandler loadJobHandler(String name){
+        return jobHandlerRepository.get(name);
+    }
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
-    }
-    public static IJobHandler loadJobHandler(String name){
-        return jobHandlerRepository.get(name);
     }
 
 

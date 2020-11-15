@@ -32,7 +32,7 @@ public class ExecutorBizClient implements ExecutorBiz {
 
     @Override
     public ReturnT<String> beat() {
-        return XxlJobRemotingUtil.postBody(addressUrl+"beat", accessToken, timeout, null, String.class);
+        return XxlJobRemotingUtil.postBody(addressUrl+"beat", accessToken, timeout, "", String.class);
     }
 
     @Override
